@@ -1,0 +1,41 @@
+﻿Usage: 
+    ljrss.py <lj-username> <password> [filename]
+
+Python 2.6+ required.
+
+Required third-party libraries:
+    * mechanize — http://wwwsearch.sourceforge.net/mechanize/
+
+Every blog on LiveJournal has its own RSS feed. LiveJournal users who are not
+friends of the blogger, can read through RSS only public entries in his blog.
+Closed blog entries are available only to authenticated the author's friends.
+
+The good news is that LiveJournal supports digest-authentication 
+to be able to read both open and closed entries via RSS.
+
+But the bad news is that Google Reader, which I use to read RSS 
+feeds, does not support this method of authentication, and I have to go to 
+LiveJournal and read my friends page through a web interface.
+
+However, there is a good site http://freemyfeed.com, which understands this 
+method of authentication and serves as an intermediary, giving the user 
+RSS-feed with all entries.
+
+So I wrote a script that receives from the LiveJournal 
+(thank David Lynch for his excellent library lj.py) list of your
+mutual friends and using your account in LJ for FreeMyFeed generate OPML-file
+containing RSS feeds that do not require authorization.
+
+Unfortunately, there is another problem. In LJ there are closed blog entries 
+of two types:
+    
+    1) available to all mutual friends
+    2) available to certain group of mutual friends
+
+The entries of the second type can not be read via RSS, even after authentication. 
+Only through a web interface. 
+
+This is a serious problem that I do not know how to solve. If you have any ideas 
+about this, contact me.
+
+Roman Kharitonov, refaim.vl@gmail.com
