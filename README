@@ -1,8 +1,6 @@
 ﻿Usage: 
     ljrss.py <lj-username> <password> [filename]
 
-Python 2.6+ required.
-
 Required third-party libraries:
     * mechanize — http://wwwsearch.sourceforge.net/mechanize/
 

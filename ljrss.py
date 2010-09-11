@@ -2,9 +2,6 @@
 
 from __future__ import print_function
 
-__author__ = 'Roman Kharitonov (refaim.vl@gmail.com)'
-__license__ = 'GPLv2'
-
 import sys
 import re
 import xml.dom.minidom
