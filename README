@@ -4,36 +4,35 @@
 Required third-party libraries:
     * mechanize — http://wwwsearch.sourceforge.net/mechanize/
 
-Every blog on LiveJournal has its own RSS feed. LiveJournal users who are not
-friends of the blogger, can read through RSS only public entries in his blog.
-Closed blog entries are available only to authenticated the author's friends.
+Every blog on LiveJournal has its own RSS feed. You have access to both public 
+and friends-only entries via RSS if you are in the friends list of the blogger. 
+If not, only public entries are available.
 
-The good news is that LiveJournal supports digest-authentication 
-to be able to read both open and closed entries via RSS.
+The good news is that LiveJournal supports digest-authentication that allows
+reading both open and closed entries via RSS.
 
 But the bad news is that Google Reader, which I use to read RSS 
-feeds, does not support this method of authentication, and I have to go to 
-LiveJournal and read my friends page through a web interface.
+feeds, does not support this method of authentication, and I have to visit
+LiveJournal website every time I want to read my friends page.
 
 However, there is a good site http://freemyfeed.com, which understands this 
 method of authentication and serves as an intermediary, giving the user 
 RSS-feed with all entries.
 
-So I wrote a script that receives from the LiveJournal 
-(thank David Lynch for his excellent library lj.py) list of your
-mutual friends and using your account in LJ for FreeMyFeed generate OPML-file
-containing RSS feeds that do not require authorization.
+So I wrote a script that gets list of your friends
+(thanks to David Lynch for his excellent library lj.py) and generates OPML-file
+for FreeMyFeed containing RSS feeds that do not require authorization.
 
-Unfortunately, there is another problem. In LJ there are closed blog entries 
+Unfortunately, there is another problem. In LJ closed blog entries can be 
 of two types:
     
-    1) available to all mutual friends
-    2) available to certain group of mutual friends
+    1) available to all friends
+    2) available to certain group of friends
 
 The entries of the second type can not be read via RSS, even after authentication. 
-Only through a web interface. 
+Only using web interface. 
 
-This is a serious problem that I do not know how to solve. If you have any ideas 
-about this, contact me.
+This is a serious problem that I haven't found solution for yet. If you have any 
+ideas about this, feel free to contact me.
 
 Roman Kharitonov, refaim.vl@gmail.com
