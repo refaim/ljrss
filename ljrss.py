@@ -58,7 +58,9 @@ def main(argv):
         response = browser.submit()
     
         url_re = r'\<p id="viewrss"\>\<a href="(.*)" onclick.*\<\/p\>'
-        return re.search(url_re, response.read()).group(1)
+        match = re.search(url_re, response.read())
+        if match:
+            return match.group(1)
 
     data = ((username, getrssurl(LJ_RSS_URL.format(username))) for username in mutualfriends)
 
@@ -75,6 +77,9 @@ def main(argv):
     print('Working with FreeMyFeed...')
     progressbar = ProgressBar(maxval=len(mutualfriends))
     for username, url in data:
+        if not url:
+            print("Warning!  Couldn't get URL for", username)
+            continue
         entry = document.createElement('outline')
         entry.setAttribute('title', username)
         entry.setAttribute('text', username)
