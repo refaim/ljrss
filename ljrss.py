@@ -62,7 +62,7 @@ def main(argv):
         if match:
             return match.group(1)
 
-    data = ((username, getrssurl(LJ_RSS_URL.format(username))) for username in mutualfriends)
+    data = ((username, getrssurl(LJ_RSS_URL.format(username.replace('_', '-')))) for username in mutualfriends)
 
     document = xml.dom.minidom.Document()
     opml = document.createElement('opml')
