@@ -12,7 +12,7 @@ from pbar import ProgressBar
 
 FMF_URL = 'http://freemyfeed.com/'
 FMF_FORM_ID = 0
-LJ_RSS_URL = 'http://livejournal.com/users/{0}/data/rss'
+LJ_RSS_URL = 'http://{0}.livejournal.com/data/rss?auth=digest'
 
 class Config(object):
     def __init__(self):
