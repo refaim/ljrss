@@ -42,7 +42,7 @@ def main(argv):
         
         friendof = getusernames(livejournal.friendof()['friendofs'])
         friends = getusernames(livejournal.getfriends()['friends'])
-        mutualfriends = list(set(friendof) & set(friends))
+        mutualfriends = [str(friend) for friend in set(friendof) & set(friends)]
     except lj.LJException as e:
         return error(e)
     print('User {0} has {1} mutual friends'.format(config.user, len(mutualfriends)))
