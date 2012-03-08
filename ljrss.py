@@ -10,10 +10,6 @@ import mechanize
 import lj
 from pbar import ProgressBar
 
-FMF_URL = 'http://freemyfeed.com/'
-FMF_FORM_ID = 0
-LJ_RSS_URL = 'http://{0}.livejournal.com/data/rss?auth=digest'
-
 class Config(object):
     def __init__(self):
         self.user = None
@@ -50,8 +46,8 @@ def main(argv):
     browser = mechanize.Browser()
     
     def getrssurl(url):
-        browser.open(FMF_URL)
-        browser.select_form(nr=FMF_FORM_ID)
+        browser.open('http://freemyfeed.com/')
+        browser.select_form(nr=0)
         browser['url'] = url
         browser['user'] = config.user
         browser['pass'] = config.password
@@ -62,7 +58,15 @@ def main(argv):
         if match:
             return match.group(1)
 
-    data = ((username, getrssurl(LJ_RSS_URL.format(username.replace('_', '-')))) for username in mutualfriends)
+    def username2url(ljuser):
+        if ljuser.startswith('_') or ljuser.endswith('_'):
+            template = 'http://users.livejournal.com/{0}'
+        else:
+            ljuser = ljuser.replace('_', '-')
+            template = 'http://{0}.livejournal.com'
+        return template.format(ljuser) + '/data/rss?auth=digest'
+
+    data = ((username, getrssurl(username2url(username))) for username in mutualfriends)
 
     document = xml.dom.minidom.Document()
     opml = document.createElement('opml')
