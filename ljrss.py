@@ -98,7 +98,7 @@ def opmlentry(document, title, url):
     return entry
 
 
-def main(argv):
+def main():
     global options, args
 
     oparser = optparse.OptionParser()
@@ -152,7 +152,7 @@ def main(argv):
 if __name__ == '__main__':
     try:
         options, args = None, None
-        sys.exit(main(sys.argv[1:]))
+        sys.exit(main())
     except KeyboardInterrupt:
         console.writeline('Interrupted by user')
     except LjrssException, ex:
