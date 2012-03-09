@@ -11,7 +11,7 @@ import xml.dom.minidom
 
 import mechanize
 
-import lj
+from lj import lj
 from utils import console
 
 class LjrssException(Exception): pass
