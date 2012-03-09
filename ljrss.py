@@ -32,10 +32,11 @@ def getfriends(lj_username, lj_password):
         def getusernames(response):
             return set(item['username'] for item in response)
 
-        friendof = getusernames(livejournal.friendof()['friendofs'])
-        friends = getusernames(livejournal.getfriends()['friends'])
-        mutual = sorted(str(friend) for friend in friends & friendof)
-        nonmutual = sorted(str(friend) for friend in friends - friendof)
+        response = livejournal.getfriends(friendof=True)
+        friendofs = getusernames(response['friendofs'])
+        friends = getusernames(response['friends'])
+        mutual = sorted(str(friend) for friend in friends & friendofs)
+        nonmutual = sorted(str(friend) for friend in friends - friendofs)
     except lj.LJException, ex:
         raise LjrssException(ex)
     return mutual, nonmutual
