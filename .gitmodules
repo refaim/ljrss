@@ -1,3 +1,6 @@
 [submodule "utils"]
 	path = utils
 	url = git://github.com/refaim/python-utils.git
+[submodule "lj"]
+	path = lj
+	url = git://github.com/kemayo/lj.py.git
