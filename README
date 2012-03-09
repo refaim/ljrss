@@ -1,5 +1,5 @@
 Usage:
-    ljrss.py <lj-username> <password> [filename]
+    ljrss.py --help
 
 Required third-party libraries:
     * mechanize — http://wwwsearch.sourceforge.net/mechanize/
