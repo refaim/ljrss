@@ -10,21 +10,16 @@ import mechanize
 import lj
 from utils import console
 
+class LjrssException(Exception): pass
+
 class Config(object):
     def __init__(self):
         self.user = None
         self.password = None
 
-def error(message):
-    message = 'Error: {0!s}'.format(message)
-    console.writeline(message)
-    return 1
-
-config = Config()
-
 def main(argv):
     if len(argv) > 3:
-        return error('ljrss.py <lj-username> <password> [filename]')
+        raise LjrssException('Usage: ljrss.py <lj-username> <password> [filename]')
     config.user, config.password = argv[0], argv[1]
     config.filename = argv[2] if len(argv) == 3 else 'lj_mutual.xml'
 
@@ -39,8 +34,8 @@ def main(argv):
         friendof = getusernames(livejournal.friendof()['friendofs'])
         friends = getusernames(livejournal.getfriends()['friends'])
         mutualfriends = [str(friend) for friend in set(friendof) & set(friends)]
-    except lj.LJException as e:
-        return error(e)
+    except lj.LJException, ex:
+        raise LjrssException(ex)
     console.writeline('User {0} has {1} mutual friends'.format(
         config.user, len(mutualfriends)))
 
@@ -101,4 +96,11 @@ def main(argv):
     return 0
 
 if __name__ == '__main__':
-    sys.exit(main(sys.argv[1:]))
+    try:
+        config = Config()
+        sys.exit(main(sys.argv[1:]))
+    except KeyboardInterrupt:
+        console.writeline('Interrupted by user')
+    except LjrssException, ex:
+        console.writeline(ex.args[0])
+    sys.exit(1)
