@@ -15,6 +15,7 @@ from lj import lj
 from utils import console
 
 class LjrssException(Exception): pass
+class FreeMyFeedException(LjrssException): pass
 
 XML_INDENT = 2 * ' '
 
@@ -64,18 +65,30 @@ def freefeed(url):
     except urllib2.URLError, ex:
         error = ex.args[0]
         if isinstance(error, socket.gaierror):
-            error = 'Error {0}: {1}'.format(*error.args)
-        raise LjrssException(error)
+            error = '{0}: {1}'.format(*error.args)
+        raise FreeMyFeedException(error)
 
-    browser.select_form(nr=0)
-    browser['url'] = url
-    browser['user'] = options.lj_username
-    browser['pass'] = options.lj_password
-    response = browser.submit()
+    try:
+        browser.select_form(nr=0)
+    except mechanize._mechanize.FormNotFoundError, ex:
+        raise FreeMyFeedException(ex)
+
+    try:
+        browser['url'] = url
+        browser['user'] = options.lj_username
+        browser['pass'] = options.lj_password
+    except mechanize._form.LocateError, ex:
+        raise FreeMyFeedException(ex)
+
+    try:
+        response = browser.submit()
+    except urllib2.HTTPError, ex:
+        raise FreeMyFeedException(ex)
 
     match = FMF_RE.search(response.read())
-    if match:
-        return match.group(1)
+    if not match:
+        raise FreeMyFeedException('Unable to free feed {0}'.format(url))
+    return match.group(1)
 
 
 def opml(document, foldername):
@@ -140,10 +153,6 @@ def main():
         feed = ljusername2url(friend)
         if options.mode == MODE_ALL and friend in mutual:
             feed = freefeed(digest(feed))
-            if not feed:
-                console.writeline(
-                    'Warning: Couldn\'t free feed for {0}'.format(friend))
-                continue
         folder.appendChild(opmlentry(document, friend, feed))
         progressbar.update(1)
     progressbar.finish()
@@ -159,6 +168,8 @@ if __name__ == '__main__':
         sys.exit(main())
     except KeyboardInterrupt:
         console.writeline('Interrupted by user')
+    except FreeMyFeedException, ex:
+        console.writeline('FreeMyFeed error: {0}'.format(ex.args[0]))
     except LjrssException, ex:
         console.writeline(ex.args[0])
     sys.exit(1)
