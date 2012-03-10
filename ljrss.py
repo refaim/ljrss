@@ -22,7 +22,7 @@ MODE_MUTUAL = 'mutual'
 MODE_ALL = 'all'
 MODES = (MODE_MUTUAL, MODE_ALL)
 
-FMF_RE = re.compile(r'\<p id="viewrss"\>\<a href="(.*)" onclick.*\<\/p\>')
+FMF_RE = re.compile(r'<p id="viewrss"><a href="([^"]+)"')
 
 def getfriends(lj_username, lj_password):
     try:
