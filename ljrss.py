@@ -58,10 +58,9 @@ def digest(feed):
 def freefeed(url):
     global options
 
-    fmfurl = 'http://freemyfeed.com/'
     browser = mechanize.Browser()
     try:
-        browser.open(fmfurl)
+        browser.open('http://freemyfeed.com/')
     except urllib2.URLError, ex:
         error = ex.args[0]
         if isinstance(error, socket.gaierror):
