@@ -114,6 +114,10 @@ def main():
         help='LJ folder name in OPML')
 
     options, args = oparser.parse_args()
+    if not options.lj_username:
+        raise LjrssException('No username specified')
+    if not options.lj_password:
+        raise LjrssException('No password specified')
     if options.mode not in MODES:
         raise LjrssException('Unknown mode "{0}"'.format(options.mode))
 
