@@ -2,6 +2,7 @@
 
 from __future__ import print_function
 
+import getpass
 import optparse
 import re
 import socket
@@ -119,8 +120,6 @@ def main():
         help='friends selection method ({0})'.format('|'.join(MODES)))
     oparser.add_option('-u', '--lj-username', default='', metavar='USERNAME',
         help='LiveJournal username')
-    oparser.add_option('-p', '--lj-password', default='', metavar='PASSWORD',
-        help='LiveJournal password')
     oparser.add_option('', '--filename', default='lj.opml',
         help='OPML filename')
     oparser.add_option('', '--folder', default='livejournal',
@@ -129,10 +128,10 @@ def main():
     options, args = oparser.parse_args()
     if not options.lj_username:
         raise LjrssException('No username specified')
-    if not options.lj_password:
-        raise LjrssException('No password specified')
     if options.mode not in MODES:
         raise LjrssException('Unknown mode "{0}"'.format(options.mode))
+
+    options.lj_password = getpass.getpass()
 
     console.writeline('Getting friends list...')
     mutual, nonmutual = getfriends(options.lj_username, options.lj_password)
