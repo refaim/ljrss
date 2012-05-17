@@ -26,19 +26,46 @@ MODES = (MODE_MUTUAL, MODE_ALL)
 
 FMF_RE = re.compile(r'<p id="viewrss"><a href="([^"]+)"')
 
+
+class LjFriend(object):
+    def __init__(self, name, is_identity, is_deleted):
+        self.name = name
+        self.is_identity = is_identity
+        self.is_deleted = is_deleted
+
+    def __eq__(self, other):
+        return (self.name, self.is_identity, self.is_deleted ==
+            other.name, other.is_identity, other.is_deleted)
+
+    def __hash__(self):
+        return hash((self.name, self.is_identity, self.is_deleted))
+
+    def __repr__(self):
+        return self.name
+
+    def __str__(self):
+        return self.name
+
+
 def getfriends(lj_username, lj_password):
     try:
         livejournal = lj.LJServer('lj.py; kemayo@gmail.com', 'Python-PyLJ/0.0.1')
         livejournal.login(lj_username, lj_password)
 
-        def getusernames(response):
-            return set(item['username'] for item in response)
+        def process(response):
+            return {
+                LjFriend(
+                    item['username'],
+                    item.get('type', '') == 'identity',
+                    item.get('status', '') == 'purged'
+                )
+                for item in response}
 
         response = livejournal.getfriends(friendof=True)
-        friendofs = getusernames(response['friendofs'])
-        friends = getusernames(response['friends'])
-        mutual = sorted(str(friend) for friend in friends & friendofs)
-        nonmutual = sorted(str(friend) for friend in friends - friendofs)
+        friendofs = process(response['friendofs'])
+        friends = process(response['friends'])
+        mutual = sorted(friends & friendofs, key=str)
+        nonmutual = sorted(friends - friendofs, key=str)
     except lj.LJException, ex:
         raise LjrssException(ex)
     return mutual, nonmutual
@@ -146,13 +173,16 @@ def main():
         friends = sorted(mutual + nonmutual)
         mutual = set(mutual)
 
+    friends = [user for user in friends
+        if not (user.is_identity or user.is_deleted)]
+
     console.writeline('Generating feeds...')
     progressbar = console.ProgressBar(maxval=len(friends))
     for friend in friends:
-        feed = ljusername2url(friend)
+        feed = ljusername2url(friend.name)
         if options.mode == MODE_ALL and friend in mutual:
             feed = freefeed(digest(feed))
-        folder.appendChild(opmlentry(document, friend, feed))
+        folder.appendChild(opmlentry(document, friend.name, feed))
         progressbar.update(1)
     progressbar.finish()
 
