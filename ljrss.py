@@ -8,6 +8,7 @@ import re
 import socket
 import sys
 import urllib2
+import xmlrpclib
 import xml.dom.minidom
 
 import mechanize
@@ -67,7 +68,10 @@ def getfriends(lj_username, lj_password):
         mutual = sorted(friends & friendofs, key=str)
         nonmutual = sorted(friends - friendofs, key=str)
     except lj.LJException, ex:
-        raise LjrssException(ex)
+        error = ex
+        if isinstance(ex.args[0], xmlrpclib.Fault):
+            error = 'Error: %s' % ex.args[0].faultString
+        raise LjrssException(error)
     return mutual, nonmutual
 
 
