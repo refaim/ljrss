@@ -115,7 +115,7 @@ def main():
     global options, args
 
     oparser = optparse.OptionParser()
-    oparser.add_option('-m', '--mode', dest='mode', default=MODE_MUTUAL,
+    oparser.add_option('-m', '--mode', dest='mode', default=MODE_ALL,
         help='friends selection method ({0})'.format('|'.join(MODES)))
     oparser.add_option('-u', '--lj-username', default='', metavar='USERNAME',
         help='LiveJournal username')
